@@ -11,7 +11,7 @@
 
 <br>
 
-<img src="Menu%20-%20image.jpg" alt="TenteCreate - Main tab" width="760">
+<img src="Main%20-%20image.jpg" alt="TenteCreate - Main tab" width="760">
 
 <sub>The Main tab: combat, automation and extras in one place.</sub>
 
