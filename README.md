@@ -2,18 +2,18 @@
 
 # TenteCreate
 
-**A clean, powerful all-in-one hub for Roblox, with smart automation and a polished ESP.**
+**A clean, powerful all-in-one hub for Roblox, with smart automation, persistent config, and a polished ESP.**
 
-![Version](https://img.shields.io/badge/version-1.0-9F73FF?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-1.9.8-9F73FF?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/platform-Roblox-00C8FF?style=for-the-badge)
 ![Interface](https://img.shields.io/badge/interface-xsx%20Lib-50FF8C?style=for-the-badge)
 ![Status](https://img.shields.io/badge/status-active-FF69B4?style=for-the-badge)
 
 <br>
 
-<img src="https://lh3.googleusercontent.com/pw/AP1GczNIjLKUaaUK-Vo_JmpkQCy6yPGrhdG6jmyd9wG9akkZikAtmluAmK900Yu46J9Qd_OwjNiL7TVblaqsuRnbMr7jCApAd03igIK4Zt3njuguoMtkt5RmrBsu1LjQPt6eI_3UqL29nJrxSponsjPmmhpl=w985-h663-s-no-gm?authuser=0" alt="TenteCreate - Main tab" width="760">
+<img src="Menu%20-%20image.jpg" alt="TenteCreate - Main tab" width="760">
 
-<sub>The Main tab: every automation one click away.</sub>
+<sub>The Main tab: combat, automation and extras in one place.</sub>
 
 </div>
 
@@ -22,6 +22,7 @@
 ## Table of Contents
 
 - [Overview](#overview)
+- [What's New in v1.9.8](#whats-new-in-v198)
 - [Features at a Glance](#features-at-a-glance)
 - [Main Tab](#main-tab)
   - [Combat](#combat)
@@ -32,6 +33,7 @@
 - [How It Works](#how-it-works)
 - [Getting Started](#getting-started)
 - [Tips and Notes](#tips-and-notes)
+- [Changelog (highlights)](#changelog-highlights)
 - [Disclaimer](#disclaimer)
 - [Credits](#credits)
 
@@ -39,13 +41,30 @@
 
 ## Overview
 
-**TenteCreate** brings the actions you repeat the most into a single, compact menu. Turn a feature on, and it quietly takes care of the rest: slapping at the right moment, dodging, answering the suspects prompt, hiding annoying ads, joining open arenas and showing you where every player is.
+**TenteCreate** brings the actions you repeat the most into a single, compact menu. Turn a feature on, and it quietly takes care of the rest: slapping at the right moment, dodging, answering the suspects prompt, hiding ads and purchase prompts, joining open arenas, recovering from bad teleports, and showing you where every player is.
 
-It was built around three ideas:
+It was built around four ideas:
 
 - **Simple.** Every feature is a single switch. Everything that can be tuned (strength, delay, colors) sits right under it.
 - **Smart.** Features react to what is actually happening in the game instead of firing blindly.
+- **Persistent.** Your toggles, strength, delay and ESP colors are saved and restored the next time you run the script.
 - **Clean.** A small, draggable window with notifications, a live FPS counter and one-click minimize and close.
+
+---
+
+## What's New in v1.9.8
+
+| Area | What changed |
+| :-- | :-- |
+| **Config save** | Toggles, strength, delay and ESP settings are saved automatically and restored on the next run |
+| **Slap strength** | Minimum strength is now **0.01** (1%). Custom accepts **0.01 – 1** |
+| **Slap Max** | On each `SlapQueue`, waits the **same Slap Delay** as Auto Slap, then fires **one** `SendSlap(1)` — never two or three |
+| **Auto Slap ↔ Slap Max** | Cannot run together. Turning one on turns the other off |
+| **Auto game** | Smarter arena pick, hop to fuller lobbies, waiting room when all arenas are busy, no join into full/in-progress matches |
+| **AntiBug** | Internal Auto Game protection against random/bugged coordinates (not flying). Soft reset, then hard restart if it keeps happening |
+| **No Gamepass Ad** | Closes only the Roblox purchase prompt, without breaking the game’s own GUIs |
+| **GUI load** | Features start **only once**, after the real menu is ready (not during the loading screen) |
+| **Re-execute** | Running the script again fully replaces the previous TenteCreate instance and keeps your saved settings |
 
 ---
 
@@ -53,15 +72,18 @@ It was built around three ideas:
 
 | Feature | What it does |
 | :-- | :-- |
-| **Auto Slap (HIT KILL)** | Slaps automatically every time the slap option appears, with your chosen strength and delay |
-| **Slap Strength** | Max, Medium, Min, or a custom value from 0.1 to 1 |
-| **Slap Delay** | From 0 to 3 seconds. Set it to 0 for no delay at all |
-| **Auto Dodge** | Keeps dodging without you touching anything |
-| **Auto Suspects** | Picks the closest player and submits them as your guess |
-| **Slap Max (no auto)** | Fires a full-strength slap at the exact moment the timing bar reaches its mark |
-| **Don't watch the ad** | Keeps the streak-save ad prompt out of your way |
-| **Auto game** | Finds an open arena, joins it, and moves on to the next one when the match ends |
+| **Auto Slap (HIT KILL)** | Queues and lands slaps when the slap button appears, with your strength and delay |
+| **Slap Strength** | Max, Medium, Min (0.01), or custom **0.01 – 1** |
+| **Slap Delay** | **0 – 3 s** between queue and hit (shared by Auto Slap and Slap Max) |
+| **Auto Dodge** | Keeps dodging while enabled |
+| **Auto Suspects** | Picks the closest player and submits the guess when the panel opens |
+| **Slap Max (no auto)** | On each manual `SlapQueue`, waits your Slap Delay, then fires **one** full-strength `SendSlap(1)` |
+| **Don't watch the ad** | Keeps the streak-save ad prompt hidden |
+| **No Gamepass Ad** | Blocks the native Roblox purchase prompt only |
+| **Auto game** | Joins open arenas, hops when another lobby has more players, waits when everything is full |
+| **AntiBug** | Soft-resets Auto Game on bugged teleports; hard-restarts if it keeps triggering |
 | **ESP** | Chams, boxes, names, distance, health bars and tracers, fully recolorable |
+| **Config** | Auto-saves and restores your setup |
 
 ---
 
@@ -71,27 +93,27 @@ It was built around three ideas:
 
 #### Auto Slap (HIT KILL)
 
-When the game offers you a slap, TenteCreate takes it for you. It first queues the slap, waits for the delay you picked, and then lands the hit with your chosen strength.
+When the game shows the slap button, TenteCreate queues the slap, waits your **Slap Delay**, and lands the hit with your chosen strength.
 
-- It reacts **once per appearance**, so it never spams.
-- It stops the moment you switch it off, even if a slap is already waiting for its delay to finish.
+- Works only after the menu is fully loaded.
+- Stops as soon as you turn it off.
+- **Cannot** run at the same time as **Slap Max**.
 
 #### Slap Strength
-
-Choose how hard the slap is:
 
 | Option | Strength |
 | :-- | :--: |
 | Max | 1 |
 | Medium | 0.5 |
-| Min | 0.1 |
-| Custom | any value from 0.1 to 1 |
+| Min | **0.01** |
+| Custom | any value from **0.01** to **1** |
 
-For **Custom**, type your value in the box and select *Custom* in the list. Values outside the allowed range are adjusted automatically, and both dots and commas work as decimal separators.
+For **Custom**, type the value and select *Custom* in the list. Dots and commas both work as decimals; out-of-range values are clamped.
 
 #### Slap Delay
 
-The time between queueing the slap and landing it. Choose anything from **0 to 3 seconds**. A value of **0** removes the wait entirely.
+Time between queueing and landing the slap: **0 – 3 seconds**.  
+**0** = no wait. This same value is used by **Slap Max**.
 
 ---
 
@@ -99,11 +121,11 @@ The time between queueing the slap and landing it. Choose anything from **0 to 3
 
 #### Auto Dodge
 
-Dodges continuously while enabled. Switch it on before a round and focus on everything else.
+Dodges continuously while enabled.
 
 #### Auto Suspects
 
-When the suspects panel opens, TenteCreate checks who is **closest to you** and submits that player's full username as your guess, automatically. It answers once each time the panel appears.
+When the suspects panel opens, submits the **closest** player’s username once per appearance.
 
 ---
 
@@ -111,29 +133,52 @@ When the suspects panel opens, TenteCreate checks who is **closest to you** and 
 
 #### Don't watch the ad
 
-Hides the streak-save ad prompt and **keeps it hidden**. If the game tries to show it again, it is dismissed right away.
+Hides the streak-save ad and keeps it hidden if the game tries to show it again.
+
+#### No Gamepass Ad
+
+Intercepts only the **Roblox purchase prompt** (gamepass / product). Your in-game shop UI is left alone.
 
 #### Auto game
 
-Hands-free matchmaking. TenteCreate reads the status board of every arena and decides for you:
+Hands-free matchmaking with clearer rules:
 
-| Arena status | Meaning | What TenteCreate does |
+| Arena label | Meaning | Action |
 | :-- | :-- | :-- |
-| Players out of capacity, with room left | Open and waiting for players | Joins it |
-| Full capacity | Full | Skips it |
-| Only numbers (no slash) | Match in progress | Stays where it is |
-| The slash comes back | Match finished | Moves on to another open arena |
+| Has `/` (e.g. `2/5`) and not full, countdown ≥ 3 | Open lobby | Can join |
+| Only numbers (no `/`) | Match in progress | Do not join |
+| Full / countdown 0–2 | Closing or full | Skip |
 
-A few more details:
+**Lobby hop (only while waiting, never mid-match):**
 
-- If you die, it starts looking for a new arena as soon as you respawn.
-- After a match ends, it prefers a **different** arena from the one you just left.
-- If an arena stays in the waiting phase for too long, it looks for another one.
-- If it can't find the arenas, you get a notification instead of silence.
+| Your arena | Other arena | Action |
+| :-- | :-- | :-- |
+| 1 (only you) | 1+ | Teleport to the fuller/other lobby |
+| 2 | 2 | Stay |
+| 2 | 0 | Stay |
+
+**Waiting room:** if every arena is in a match (numbers only), you are moved to a hold position with a short “A moment of waiting” UI until a lobby opens again.
+
+Notifications stay limited to: entered arena, left arena, entered another arena (with player count when available).
+
+#### AntiBug (built into Auto Game)
+
+Not a button — always active while Auto Game is on.
+
+- Detects **bugged / random teleports** (not normal flying).
+- Temporarily pauses Auto Game code, waits **0.1 s**, then resumes.
+- Shows a red notification when it runs.
+- If it triggers many times in a short window, it performs a **hard restart** of the Auto Game systems.
 
 #### Slap Max (no auto)
 
-For the moments you want to do the slap yourself with perfect timing. When the timing bar shows up, TenteCreate watches it, and the instant it reaches its mark, a **full-strength hit kill** goes out. There is **no delay**, and it won't repeat until the next time the bar appears.
+You slap manually. TenteCreate only finishes the hit:
+
+1. Detects `SlapQueue:FireServer()`
+2. Waits the **same Slap Delay** as Auto Slap
+3. Fires **exactly one** `SendSlap(1)`
+
+No bar watching, no double/triple hits. **Cannot** run together with Auto Slap.
 
 ---
 
@@ -141,7 +186,7 @@ For the moments you want to do the slap yourself with perfect timing. When the t
 
 <div align="center">
 
-<img src="https://lh3.googleusercontent.com/pw/AP1GczM4eOZ-l2O_OKtib_gGrqKWZbUbDdGDqdckaWHsT3vnnx3Zuf4ledku8CB5kRdZmZhz8lDH6fzLl8uH31OBrwf-Hp3gM81yB6zmUkLepeR7cHVpwtI_wzk5_w92hTBgzuWwtRBwfjpXhJILR5Z5gZqM=w913-h572-s-no-gm?authuser=0" alt="TenteCreate - ESP tab" width="760">
+<img src="Esp%20-%20image.jpg" alt="TenteCreate - ESP tab" width="760">
 
 <sub>The ESP tab: pick what you want to see and how it looks.</sub>
 
@@ -149,30 +194,26 @@ For the moments you want to do the slap yourself with perfect timing. When the t
 
 <br>
 
-See every player at a glance, through walls, with a presentation that stays easy on the eyes.
-
 | Element | Description |
 | :-- | :-- |
-| **Chams** | A glowing outline and soft fill that wraps each player |
-| **Boxes** | A rounded box around every player |
-| **Names** | The player's name above them |
-| **Distance** | How far away they are, shown under them |
-| **Health Bar** | A slim bar beside the box that shifts from green to red as health drops |
-| **Tracers** | A line from the bottom of your screen to each player |
+| **Chams** | Outline and soft fill through walls |
+| **Boxes** | Rounded box around each player |
+| **Names** | Display name above the player |
+| **Distance** | Distance under the player |
+| **Health Bar** | Bar beside the box (green → red) |
+| **Tracers** | Line from the bottom of the screen to each player |
 
 **Settings**
 
-- **Max Distance:** hide players beyond the range you choose.
-- **Fill Transparency:** control how solid or see-through the chams fill is.
+- **Max Distance** — hide players beyond this range  
+- **Fill Transparency** — how solid the chams fill is  
 
-**Colors**
+**Colors** (outline / fill / text)
 
-Outline/box, fill and text each have their own color, and you can set it two ways:
+- Presets: Purple, Cyan, Red, Green, Yellow, Orange, Pink, White, **Rainbow**
+- Custom: `#RRGGBB` or `R,G,B`
 
-- **Presets:** Purple, Cyan, Red, Green, Yellow, Orange, Pink, White and **Rainbow** (a smooth animated color cycle).
-- **Custom:** type any color as a hex code (for example `#9F73FF`) or as three numbers (for example `255, 0, 0`).
-
-Players disappear from the ESP the moment they die or leave, and everything is removed cleanly when you turn it off.
+ESP settings are included in the saved config.
 
 ---
 
@@ -180,7 +221,7 @@ Players disappear from the ESP the moment they die or leave, and everything is r
 
 <div align="center">
 
-<img src="https://lh3.googleusercontent.com/pw/AP1GczP78egZXgWFGQsRwb3EpsUOVagoM3Y3EP6_BWKsvYsS3l2484JGP30Kg5673C9Eg1k7UsM-Ooupsh430rXlE4FjK6DO1suqA1bytHfE9_6R9zETtCbGNx6PI8cARtW6SwWl2UhCZp238j_3p9LSsf8x=w915-h607-s-no-gm?authuser=0" alt="TenteCreate - About tab" width="760">
+<img src="About%20-%20image.jpg" alt="TenteCreate - About tab" width="760">
 
 <sub>The About tab: version, credits and menu shortcut.</sub>
 
@@ -188,50 +229,50 @@ Players disappear from the ESP the moment they die or leave, and everything is r
 
 <br>
 
-The interface is designed to stay out of your way:
+- **Compact window** with scroll on every tab  
+- **Draggable** title area  
+- **Minimize / close** in the header  
+- **Right Alt** — hide / show the menu  
+- **Notifications** for toggles and important Auto Game events  
+- **Watermark** — version, username, FPS  
+- **Credit badge** with creator avatar  
 
-- **Compact window.** Smaller than a typical hub, and fully scrollable on every tab.
-- **Draggable.** Move it anywhere on your screen.
-- **Minimize and close.** Collapse the window to its title bar, or close it to shut everything down and remove every trace.
-- **Hide and show.** Press **Right Alt** to toggle the menu at any time.
-- **Notifications.** A short message confirms every switch you flip, and tells you when something needs attention.
-- **Live watermark.** Shows the version, your name and your current FPS.
-- **Credit badge.** A small badge in the header shows the creator along with a profile picture.
+Closing the hub unloads features, ESP, waiting room and connections cleanly. Running the script again replaces the previous TenteCreate instance only (other scripts are left alone).
 
 ---
 
 ## How It Works
 
-You don't need any technical background to use TenteCreate, but here is the idea behind it.
+**Same language as the game.**  
+Actions use the game’s own remotes (`SlapQueue`, `SendSlap`, `Dodge`, `Guess`, `Exit`, …), so the server sees the same kind of messages as normal UI buttons.
 
-**It speaks the game's own language.**
-The game has its own way of handling actions: when you press a button, your device tells the game's server what you did. TenteCreate sends those very same messages, so the game treats them just like the ones from its own buttons.
+**Watches the UI.**  
+Slap button, suspects panel, Exit, arena boards — tracked continuously. If the element isn’t there, nothing fires.
 
-**It watches the screen, like you do.**
-Most features wait for something to appear: a slap option, the suspects panel, the timing bar, an arena status board. TenteCreate keeps an eye on these elements many times per second and reacts the moment they change. If the thing it is waiting for isn't there, it does nothing.
+**Once per appearance (where it matters).**  
+Auto Slap / Slap Max / Suspects avoid pointless spam. Slap Max especially: **one queue → one delayed max hit**.
 
-**It acts once, then waits.**
-To avoid spamming, a feature that reacts to something appearing fires **once per appearance**, then resets when that element goes away. That keeps everything natural and predictable.
+**Reads the world.**  
+Nearest player for suspects, arena labels for matchmaking, positions/health for ESP.
 
-**It reads the world around you.**
-For nearest-player features, it measures real distances between characters. For the arena logic, it reads each arena's player count and uses it to tell whether a match is open, full, running or over. For the ESP, it follows every player's position and health in real time.
+**Starts only when the menu is ready.**  
+Loading / intro does not arm Auto Game or combat. Systems start once after the real GUI is open, so nothing runs twice on inject.
 
-**It keeps your screen tidy.**
-All visuals live in their own layer and are fully removed when you close the hub. Turning a feature off stops it immediately.
-
-**Everything is optional.**
-Every feature starts **off**. Turn on only what you need.
+**Config file.**  
+`TenteCreate_Config.json` stores state and settings when the executor supports `writefile` / `readfile`.
 
 ---
 
 ## Getting Started
 
-1. Open Roblox and join your game.
-2. Run **TenteCreate** with a compatible script executor.
-3. Wait for the intro and the *TenteCreate loaded!* notification.
-4. Open the **Main** tab and flip on what you want.
-5. Visit the **ESP** tab to choose what you see and how it looks.
-6. Press **Right Alt** whenever you want to hide or show the menu.
+1. Open Roblox and join the supported game.  
+2. Run **TenteCreate** with a compatible executor.  
+3. Wait for the intro and the **TenteCreate loaded!** notification.  
+4. Open **Main** and enable what you need.  
+5. Open **ESP** to customize visuals.  
+6. Press **Right Alt** anytime to hide or show the menu.
+
+Your last setup is restored automatically when a config file is present.
 
 ---
 
@@ -242,45 +283,74 @@ Every feature starts **off**. Turn on only what you need.
 
 <br>
 
-Press **Right Alt** to bring it back. If you minimized it, click the **+** button in the header.
+Press **Right Alt**. If you minimized it, click **+** in the header.
 
 </details>
 
 <details>
-<summary><b>Auto game isn't joining anything.</b></summary>
+<summary><b>Auto game isn’t joining.</b></summary>
 
 <br>
 
-Make sure at least one arena has room for more players. Full arenas and arenas with a match in progress are skipped on purpose. If the arenas can't be found at all, TenteCreate lets you know with a notification.
+It only joins lobbies with `/` in the label, not full, and with countdown at least **3**. If every arena shows only numbers, the waiting room appears until one opens.
 
 </details>
 
 <details>
-<summary><b>Slap Max doesn't fire.</b></summary>
+<summary><b>Slap Max doesn’t fire.</b></summary>
 
 <br>
 
-It only works while the timing bar is on screen, and it fires when the bar reaches its mark. Make sure the switch is on **before** the bar appears.
+Enable **Slap Max** with **Auto Slap off**. Play normally so the game fires `SlapQueue`. After your **Slap Delay**, one `SendSlap(1)` is sent. Set delay to `0` for an immediate max hit.
 
 </details>
 
 <details>
-<summary><b>How many players can the ESP outline at once?</b></summary>
+<summary><b>Can Auto Slap and Slap Max run together?</b></summary>
 
 <br>
 
-Roblox limits how many glowing outlines (chams) can be drawn at the same time, at around 31. Boxes, names, distance, health bars and tracers don't have that limit.
+**No.** Enabling one disables the other on purpose so hit-kill behavior stays consistent.
 
 </details>
 
 <details>
-<summary><b>Can I use both Auto Slap and Slap Max?</b></summary>
+<summary><b>AntiBug keeps notifying me.</b></summary>
 
 <br>
 
-Yes, they are independent. Auto Slap takes the slap for you with the strength and delay you chose, while Slap Max is for perfectly timed full-strength hits.
+That means the client is being moved to unexpected coordinates while Auto Game is on. AntiBug soft-resets; if it happens often, it hard-restarts Auto Game. If it still fails, re-execute the script once.
 
 </details>
+
+<details>
+<summary><b>How many chams at once?</b></summary>
+
+<br>
+
+Roblox limits simultaneous Highlights (chams) to about **31**. Boxes, names, distance, health and tracers are not limited the same way.
+
+</details>
+
+---
+
+## Changelog (highlights)
+
+### v1.9.8
+- Slap Max: same delay as Auto Slap, **one** `SendSlap(1)` per `SlapQueue`
+- Auto Slap and Slap Max mutually exclusive
+- Min strength **0.01**; custom range **0.01 – 1**
+- Auto game: join rules, lobby hop, waiting room, no mid-match switches
+- AntiBug system for Auto Game
+- No Gamepass Ad limited to native purchase prompts
+- Config persistence
+- Features arm only after the menu is ready
+- Clean re-inject of TenteCreate only
+
+### Earlier
+- ESP (chams, boxes, names, distance, health, tracers, colors)
+- Auto Dodge, Auto Suspects, Don’t watch the ad
+- Compact UI with minimize, drag, Right Alt, watermark and notifications
 
 ---
 
@@ -301,6 +371,6 @@ TenteCreate is provided as-is, for educational and personal use. Using scripts i
 
 **If you enjoy TenteCreate, share it with your friends.**
 
-<sub>Made with care by ByteBandit_ofici</sub>
+<sub>Made with care by ByteBandit_ofici · v1.9.8</sub>
 
 </div>
